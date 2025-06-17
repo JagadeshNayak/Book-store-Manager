@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: bookstore-pipeline
+spec:
+  tasks:
+    - name: clone-repo
+      taskRef:
+        name: git-clone
+        kind: Task
+      params:
+        - name: url
+          value: https://github.com/your-user/bookstore-repo
+    - name: build-and-push
+      runAfter: ["clone-repo"]
+      taskRef:
+        name: kaniko
+      params:
+        - name: IMAGE
+          value: docker.io/your-dockerhub-username/bookstore:latest
